@@ -18,7 +18,7 @@ const createWindow = () => {
         win.webContents.openDevTools()
     }
 
-    win.loadFile(path.join(__dirname, './renderer/index.html'))
+    win.loadURL('http://localhost:3000')
 }
 
 app.whenReady().then(() => {
