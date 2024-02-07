@@ -1,6 +1,6 @@
 require('dotenv').config()
 const path = require('path')
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, Menu } = require('electron')
 
 const createWindow = () => {
     const win = new BrowserWindow({
@@ -11,6 +11,8 @@ const createWindow = () => {
       center: true
     })
   
+    Menu.setApplicationMenu(null);
+    
     // open devtool if in dev env
     if (process.env.NODE_ENV === 'development'){
         win.webContents.openDevTools()
