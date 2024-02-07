@@ -1,0 +1,19 @@
+{
+  "name": "the-museum-cinemaya-desktop-application",
+  "productName": "The Museum Cinemaya",
+  "version": "1.0.0",
+  "description": "The Museum Cinemaya Desktop Application",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "npx electronmon ."
+  },
+  "author": "VP CODE LABS",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^28.2.1"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.1"
+  }
+}
