@@ -11,11 +11,14 @@
     "start": "next start",
     "lint": "next lint",
     "electron": "electron .",
-    "electronmon": "npx electronmon ."
+    "electron-c": "concurrently \"next dev\" \"electron .\"",
+    "electronmon": "npx electronmon .",
+    "electronmon-c": "concurrently \"next dev\" \"npx electronmon .\""
   },
   "author": "VP CODE LABS",
   "license": "MIT",
   "dependencies": {
+    "concurrently": "^8.2.2",
     "dotenv": "^16.4.1",
     "next": "14.1.0",
     "react": "^18",

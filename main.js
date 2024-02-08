@@ -1,6 +1,8 @@
-require('dotenv').config()
 const path = require('path')
+const dotenv = require('dotenv');
 const { app, BrowserWindow, Menu } = require('electron')
+
+dotenv.config({ path: path.join(__dirname, '.env.local') })
 
 const createWindow = () => {
     const win = new BrowserWindow({
@@ -8,6 +10,7 @@ const createWindow = () => {
       height: 1080,
       minWidth: 1080,
       minHeight: 720,
+      icon: __dirname + '/src/app/favicon.ico',
       center: true
     })
   
