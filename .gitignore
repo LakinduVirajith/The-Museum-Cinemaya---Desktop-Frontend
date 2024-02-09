@@ -1,0 +1,26 @@
+# dependencies
+/node_modules
+
+# production
+.next
+/out
+
+# build output
+app/
+dist/
+
+# environment variables
+.env.local
+.env.development
+.env.production
+
+# lock files
+package-lock.json
+yarn.lock
+
+# log files
+*.log
+
+# editor directories and files
+.idea
+.vscode
