@@ -14,7 +14,8 @@ module.exports = {
       zinc: colors.zinc,
       nav: "#181818",
       themeBlack: "#202020",
-      buttonBlue: "#4588ED"
+      buttonBlue: "#4588ED",
+      buttonBlack: "181818"
     },
     extend: {},
   },
