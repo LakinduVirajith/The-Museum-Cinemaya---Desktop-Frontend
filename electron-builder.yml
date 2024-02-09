@@ -1,0 +1,23 @@
+appId: com.the-museum-cinemaya.app
+productName: The Museum Cinemaya
+copyright: Copyright (c) 2024 VP CODE LABS
+directories:
+  output: dist
+  buildResources: resources
+files:
+  - from: .
+    filter:
+      - package.json
+      - app
+publish: null
+win:
+  target:
+    - nsis
+    - dir
+    - portable
+    - zip
+nsis:
+  oneClick: false
+  uninstallDisplayName: The Museum Cinemaya Uninstaller
+  license: license.md
+  allowToChangeInstallationDirectory: true

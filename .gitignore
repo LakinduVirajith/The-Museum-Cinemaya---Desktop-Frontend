@@ -1,64 +1,26 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-## NextJs ##
 # dependencies
 /node_modules
-/.pnp
-.pnp.js
-.yarn/install-state.gz
-
-# testing
-/coverage
-
-# next.js
-/.next/
-/out/
 
 # production
-/build
+.next
+/out
 
-# misc
-.DS_Store
-*.pem
+# build output
+app/
+dist/
 
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# environment variables
+.env.local
+.env.development
+.env.production
 
-# local env files
-.env*.local
-.env
+# lock files
+package-lock.json
+yarn.lock
 
-# vercel
-.vercel
+# log files
+*.log
 
-# typescript
-*.tsbuildinfo
-next-env.d.ts
-
-## Electron ##
-# Generated API definitions
-electron-api.json
-electron.d.ts
-
-# Spec hash calculation
-spec/.hash
-
-# Eslint Cache
-.eslintcache*
-
-# Generated native addon files
-/spec/fixtures/native-addon/echo/build/
-
-# If someone runs tsc this is where stuff will end up
-ts-gen
-
-# Used to accelerate CI builds
-.depshash
-.depshash-target
-
-# Used to accelerate builds after sync
-patches/mtime-cache.json
-
-spec/fixtures/logo.png
+# editor directories and files
+.idea
+.vscode
