@@ -8,7 +8,9 @@ export default function SecondaryNav() {
         <nav className='h-24 w-full px-12 flex justify-between items-center gap-12 bg-nav shadow-lg'>
             {/* LOGO */}
             <section className='cursor-pointer'>
-                <Image src="/images/logo.png" width={50} height={50} alt="logo"/>
+                <Link href="/home">
+                    <Image src="/images/logo.png" width={50} height={50} alt="logo"/>
+                </Link>
             </section>
 
             {/* BUTTONS */}

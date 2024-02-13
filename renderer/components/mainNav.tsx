@@ -9,7 +9,9 @@ export default function MainNav() {
             <div className='flex items-center gap-12'>
                 {/* LOGO */}
                 <section className='cursor-pointer'>
-                    <Image src="/images/logo.png" width={50} height={50} alt="logo"/>
+                    <Link href="/home">
+                        <Image src="/images/logo.png" width={50} height={50} alt="logo"/>
+                    </Link>
                 </section>
 
                 {/* SEARCH BAR */}
