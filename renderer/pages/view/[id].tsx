@@ -50,7 +50,7 @@ export default function ViewPage() {
       const fetchData = async () => {
         try {
           setIsLoading(true);
-          const response = await fetch(`http://localhost:8000/film/${id}`);
+          const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/film/${id}`);
   
           if (response.ok) {
             const data = await response.json();

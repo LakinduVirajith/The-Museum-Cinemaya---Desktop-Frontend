@@ -23,7 +23,7 @@ function useFormFields(initialState: FormFields) {
 }
 
 function capitalizeEachWord(str) {
-  return str.replace(/\b\w/g, function(char) {
+  return str.replace(/\b\w/g, function(char: any) {
     return char.toUpperCase();
   }).replace(/([A-Z])/g, ' $1').trim();
 }
@@ -80,7 +80,7 @@ export default function InsertForm() {
     setIsLoading(true);
 
     try {
-      const res = await fetch('http://localhost:8000/film', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/film`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(fields),

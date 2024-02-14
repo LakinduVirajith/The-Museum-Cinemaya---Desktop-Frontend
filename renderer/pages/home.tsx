@@ -36,7 +36,7 @@ export default function HomePage() {
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch('http://localhost:8000/films');
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/films`);
 
         if (response.ok) {
           const data = await response.json();
