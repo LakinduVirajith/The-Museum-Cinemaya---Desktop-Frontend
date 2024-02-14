@@ -1,16 +1,58 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Head from 'next/head'
+import toast from 'react-hot-toast'
 import MainNav from '../components/mainNav'
 import Card from '../components/card'
 
 export default function HomePage() {
-  const componentsData = [
-    { id: 1, name: 'Component 1' }, { id: 2, name: 'Component 2' }, { id: 3, name: 'Component 3' }, { id: 4, name: 'Component 4' },
-    { id: 5, name: 'Component 5' }, { id: 6, name: 'Component 6' }, { id: 7, name: 'Component 7' }, { id: 8, name: 'Component 8' },
-    { id: 9, name: 'Component 9' }, { id: 10, name: 'Component 10' }, { id: 11, name: 'Component 11' }, { id: 12, name: 'Component 12' },
-    { id: 13, name: 'Component 13' }, { id: 14, name: 'Component 14' }, { id: 15, name: 'Component 15' }, { id: 16, name: 'Component 16' },
-    { id: 17, name: 'Component 17' }, { id: 18, name: 'Component 18' }, { id: 19, name: 'Component 19' }, { id: 20, name: 'Component 20' },
+  const componentsData: Film[] = [
+    { id: 1, filmNumber: '001', filmTitle: 'No Title', releaseDate: '2024.02.06', synopsis: 'English', production: 'Sample', director: 'Sample', producer: 'Sample', reference: '0000/00'},
+    { id: 2, filmNumber: '002', filmTitle: 'No Title', releaseDate: '2024.02.06', synopsis: 'English', production: 'Sample', director: 'Sample', producer: 'Sample', reference: '0000/00'},
+    { id: 3, filmNumber: '003', filmTitle: 'No Title', releaseDate: '2024.02.06', synopsis: 'English', production: 'Sample', director: 'Sample', producer: 'Sample', reference: '0000/00'},
+    { id: 4, filmNumber: '004', filmTitle: 'No Title', releaseDate: '2024.02.06', synopsis: 'English', production: 'Sample', director: 'Sample', producer: 'Sample', reference: '0000/00'},
+    { id: 5, filmNumber: '005', filmTitle: 'No Title', releaseDate: '2024.02.06', synopsis: 'English', production: 'Sample', director: 'Sample', producer: 'Sample', reference: '0000/00'},
+    { id: 6, filmNumber: '006', filmTitle: 'No Title', releaseDate: '2024.02.06', synopsis: 'English', production: 'Sample', director: 'Sample', producer: 'Sample', reference: '0000/00'},
+    { id: 7, filmNumber: '007', filmTitle: 'No Title', releaseDate: '2024.02.06', synopsis: 'English', production: 'Sample', director: 'Sample', producer: 'Sample', reference: '0000/00'},
+    { id: 8, filmNumber: '008', filmTitle: 'No Title', releaseDate: '2024.02.06', synopsis: 'English', production: 'Sample', director: 'Sample', producer: 'Sample', reference: '0000/00'},
+    { id: 9, filmNumber: '009', filmTitle: 'No Title', releaseDate: '2024.02.06', synopsis: 'English', production: 'Sample', director: 'Sample', producer: 'Sample', reference: '0000/00'},
+    { id: 10, filmNumber: '010', filmTitle: 'No Title', releaseDate: '2024.02.06', synopsis: 'English', production: 'Sample', director: 'Sample', producer: 'Sample', reference: '0000/00'},
+    { id: 11, filmNumber: '011', filmTitle: 'No Title', releaseDate: '2024.02.06', synopsis: 'English', production: 'Sample', director: 'Sample', producer: 'Sample', reference: '0000/00'},
+    { id: 12, filmNumber: '012', filmTitle: 'No Title', releaseDate: '2024.02.06', synopsis: 'English', production: 'Sample', director: 'Sample', producer: 'Sample', reference: '0000/00'},
+    { id: 13, filmNumber: '013', filmTitle: 'No Title', releaseDate: '2024.02.06', synopsis: 'English', production: 'Sample', director: 'Sample', producer: 'Sample', reference: '0000/00'},
+    { id: 14, filmNumber: '014', filmTitle: 'No Title', releaseDate: '2024.02.06', synopsis: 'English', production: 'Sample', director: 'Sample', producer: 'Sample', reference: '0000/00'},
+    { id: 15, filmNumber: '015', filmTitle: 'No Title', releaseDate: '2024.02.06', synopsis: 'English', production: 'Sample', director: 'Sample', producer: 'Sample', reference: '0000/00'},
+    { id: 16, filmNumber: '016', filmTitle: 'No Title', releaseDate: '2024.02.06', synopsis: 'English', production: 'Sample', director: 'Sample', producer: 'Sample', reference: '0000/00'},
+    { id: 17, filmNumber: '017', filmTitle: 'No Title', releaseDate: '2024.02.06', synopsis: 'English', production: 'Sample', director: 'Sample', producer: 'Sample', reference: '0000/00'},
+    { id: 18, filmNumber: '018', filmTitle: 'No Title', releaseDate: '2024.02.06', synopsis: 'English', production: 'Sample', director: 'Sample', producer: 'Sample', reference: '0000/00'},
+    { id: 19, filmNumber: '019', filmTitle: 'No Title', releaseDate: '2024.02.06', synopsis: 'English', production: 'Sample', director: 'Sample', producer: 'Sample', reference: '0000/00'},
+    { id: 20, filmNumber: '020', filmTitle: 'No Title', releaseDate: '2024.02.06', synopsis: 'English', production: 'Sample', director: 'Sample', producer: 'Sample', reference: '0000/00'},
   ];
+
+  const [films, setFilms] = useState(componentsData);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch('http://localhost:8000/films');
+
+        if (response.ok) {
+          const data = await response.json();
+          setFilms(data);
+        } else {
+          const errorText = await response.text();
+          toast.error(`${response.status}: ${errorText}`);
+        }
+      } catch (error) {
+        toast.error('404: Failed to fetch data');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []); 
 
   return (
     <React.Fragment>
@@ -22,9 +64,9 @@ export default function HomePage() {
 
         {/* FILM DATA */}
         <div className="card-style">
-          {componentsData.map(component => (
+          {films.map(component => (
             <div key={component.id}>
-              <Card movie={component}/>
+              <Card film={component}/>
             </div>
           ))}
         </div>

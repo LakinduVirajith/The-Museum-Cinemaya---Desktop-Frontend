@@ -15,7 +15,10 @@ module.exports = {
       nav: "#181818",
       themeBlack: "#202020",
       buttonBlue: "#4588ED",
-      buttonBlack: "181818"
+      buttonBlack: "#181818",
+      buttonGreen: "#26EF6B",
+      buttonRed: "#EF2626",
+      buttonOrange: "#EF8726"
     },
     extend: {},
   },
