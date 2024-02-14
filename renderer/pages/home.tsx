@@ -31,10 +31,12 @@ export default function HomePage() {
   ];
 
   const [films, setFilms] = useState(sampleData);
+  const [searchQuery, setSearchQuery] = useState('');
   const [page, setPage] = useState(1);
   const [isPageLoading, setIsPageLoading] = useState(false);
   const [isScrollLoading, setIsScrollLoading] = useState(false);
 
+  /* FETCH DATA */
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -65,6 +67,7 @@ export default function HomePage() {
     fetchData();
   }, [page]);
 
+  /* WHEN SCROLL */
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -77,13 +80,38 @@ export default function HomePage() {
     }
   }
 
+  /* WHEN SEARCH */
+  const handleSearch = async (query: string) => {
+    setSearchQuery(query);
+    if(query === 'cl'){
+      if(page === 1) setPage(2);
+      else setPage(1);
+      setFilms([]);
+      return;
+    }
+
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/search/${searchQuery}`);
+
+      if (response.ok) {
+        const data = await response.json();
+        setFilms(data);
+      } else {
+        const errorText = await response.text();
+        toast.error(`${response.status}: ${errorText}`);
+      }
+    } catch (error) {
+      toast.error('404: failed to search data. please check your internet connection');
+    }
+  };
+
   return (
     <React.Fragment>
       <Head>
         <title>Home - The Museum Cinemaya</title>
       </Head>
       <div className="page-style pb-32">
-        <MainNav />
+        <MainNav onSearch={handleSearch}/>
 
         {/* FILM DATA */}
         {isPageLoading ? (
