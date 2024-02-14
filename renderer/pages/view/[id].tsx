@@ -9,6 +9,7 @@ export default function ViewPage() {
     const router = useRouter();
     const { id } = router.query;
 
+    /* SAMPLE */
     const sampleData: SingleFilm = { 
       filmNumber: '12345',
       referance: 'REF123',
