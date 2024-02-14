@@ -6,6 +6,7 @@ import Card from '../components/card'
 import Loader from '../components/loader'
 
 export default function HomePage() {
+  /* SAMPLE */
   const sampleData: Film[] = [
     { id: 1, filmNumber: '001', filmTitle: 'No Title', releaseDate: '2024.02.06', synopsis: 'English', production: 'Sample', director: 'Sample', producer: 'Sample', reference: '0000/00'},
     { id: 2, filmNumber: '002', filmTitle: 'No Title', releaseDate: '2024.02.06', synopsis: 'English', production: 'Sample', director: 'Sample', producer: 'Sample', reference: '0000/00'},
@@ -30,17 +31,25 @@ export default function HomePage() {
   ];
 
   const [films, setFilms] = useState(sampleData);
-  const [isLoading, setIsLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [isPageLoading, setIsPageLoading] = useState(false);
+  const [isScrollLoading, setIsScrollLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setIsLoading(true);
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/films`);
+        if(page == 1) setIsPageLoading(true);
+
+        /* SAMPLE */
+        setTimeout(() => {
+          setFilms(prev => [...prev, ...sampleData]);
+        }, 500);
+
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/films/${page}`);
 
         if (response.ok) {
           const data = await response.json();
-          setFilms(data);
+          setFilms(prev => [...prev, ...data]);
         } else {
           const errorText = await response.text();
           toast.error(`${response.status}: ${errorText}`);
@@ -48,23 +57,36 @@ export default function HomePage() {
       } catch (error) {
         toast.error('404: failed to load data. please check your internet connection');
       } finally {
-        setIsLoading(false);
+        setIsScrollLoading(false);
+        setIsPageLoading(false);
       }
     };
 
     fetchData();
-  }, []); 
+  }, [page]);
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [])
+  
+  const handleScroll = () => {
+    if(window.innerHeight + document.documentElement.scrollTop + 1 >= document.documentElement.scrollHeight){
+      setIsScrollLoading(true);
+      setPage(prev => prev + 1);
+    }
+  }
 
   return (
     <React.Fragment>
       <Head>
         <title>Home - The Museum Cinemaya</title>
       </Head>
-      <div className="page-style">
+      <div className="page-style pb-32">
         <MainNav />
 
         {/* FILM DATA */}
-        {isLoading ? (
+        {isPageLoading ? (
           <Loader />
         ) : (
           films && (
@@ -77,6 +99,8 @@ export default function HomePage() {
             </div>
           )
         )}
+
+        {isScrollLoading && <span className="loader"></span>}
       </div>
     </React.Fragment>
   )
