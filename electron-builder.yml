@@ -19,5 +19,5 @@ win:
 nsis:
   oneClick: false
   uninstallDisplayName: The Museum Cinemaya Uninstaller
-  license: license.md
+  license: LICENSE.md
   allowToChangeInstallationDirectory: true
