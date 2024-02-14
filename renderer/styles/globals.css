@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+@import "loader.css";
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
@@ -29,8 +30,20 @@ body {
   @apply grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 w-full px-12 lg:px-24 pt-12 md:gap-x-36 lg:gap-x-72 xl:gap-x-36 gap-y-5
 }
 
+.label-style{
+  @apply text-white
+}
+
 .input-style{
   @apply rounded-md p-1
+}
+
+.view-style{
+  @apply text-white flex justify-between border border-white border-solid border-spacing-4 rounded-lg p-2.5 hover:bg-white hover:text-zinc-900 hover:scale-105 transition duration-300
+}
+
+.span-style{
+  @apply underline underline-offset-4 text-end
 }
 
 /* BUTTON STYLE */

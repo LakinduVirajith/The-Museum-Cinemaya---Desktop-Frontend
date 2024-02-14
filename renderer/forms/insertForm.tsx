@@ -87,14 +87,14 @@ export default function InsertForm() {
       });
 
       if (res.ok) {
-        toast.success('Record added successfully');
+        toast.success('record added successfully');
         resetFields();
       } else {
         const errorText = await res.text();
         toast.error(`${res.status}: ${errorText}`);
       }
     } catch (error) {
-      toast.error('404: Please ensure your connection is stable');
+      toast.error('404: failed to store data. please ensure your connection is stable');
     } finally {
       setIsLoading(false);
     }
@@ -105,7 +105,7 @@ export default function InsertForm() {
       <div className='form-wapper'>
         {Object.entries(fields).map(([name, value]) => (
           <section key={name} className="flex justify-between items-center">
-            <label className="text-white">{capitalizeEachWord(name)}</label>&nbsp;&nbsp;
+            <label className="label-style">{capitalizeEachWord(name)}</label>&nbsp;&nbsp;
             <input
               type="text"
               className="input-style"
