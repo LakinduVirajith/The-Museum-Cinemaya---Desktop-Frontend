@@ -9,3 +9,37 @@ type Film = {
     producer: string,
     reference: string
 }
+
+type SingleFilm = {
+    filmNumber: string,
+    referance: string,
+    releaseDate: string,
+    filmTitle: string,
+    synopsis: string,
+    production: string,
+    director: string,
+    producer: string,
+    cast: string,
+    script: string,
+    camera: string,
+    editor: string,
+    music: string,
+    story: string,
+    dialogue: string,
+    assistantDirector: string,
+    lyrics: string,
+    songs: string,
+    makeUp: string,
+    artDirector: string,
+    audioController: string,
+    title: string,
+    theaters: string,
+    awardPresidential: string,
+    awardsSarasaviya: string,
+    awardsOcic: string,
+    awardOthers: string,
+    festivals: string,
+    article: string,
+    critics: string,
+    others: string
+}

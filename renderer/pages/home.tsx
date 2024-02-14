@@ -3,9 +3,10 @@ import Head from 'next/head'
 import toast from 'react-hot-toast'
 import MainNav from '../components/mainNav'
 import Card from '../components/card'
+import Loader from '../components/loader'
 
 export default function HomePage() {
-  const componentsData: Film[] = [
+  const sampleData: Film[] = [
     { id: 1, filmNumber: '001', filmTitle: 'No Title', releaseDate: '2024.02.06', synopsis: 'English', production: 'Sample', director: 'Sample', producer: 'Sample', reference: '0000/00'},
     { id: 2, filmNumber: '002', filmTitle: 'No Title', releaseDate: '2024.02.06', synopsis: 'English', production: 'Sample', director: 'Sample', producer: 'Sample', reference: '0000/00'},
     { id: 3, filmNumber: '003', filmTitle: 'No Title', releaseDate: '2024.02.06', synopsis: 'English', production: 'Sample', director: 'Sample', producer: 'Sample', reference: '0000/00'},
@@ -28,14 +29,14 @@ export default function HomePage() {
     { id: 20, filmNumber: '020', filmTitle: 'No Title', releaseDate: '2024.02.06', synopsis: 'English', production: 'Sample', director: 'Sample', producer: 'Sample', reference: '0000/00'},
   ];
 
-  const [films, setFilms] = useState(componentsData);
+  const [films, setFilms] = useState(sampleData);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch('http://localhost:8000/films');
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/films`);
 
         if (response.ok) {
           const data = await response.json();
@@ -45,7 +46,7 @@ export default function HomePage() {
           toast.error(`${response.status}: ${errorText}`);
         }
       } catch (error) {
-        toast.error('404: Failed to fetch data');
+        toast.error('404: failed to load data. please check your internet connection');
       } finally {
         setIsLoading(false);
       }
@@ -63,13 +64,19 @@ export default function HomePage() {
         <MainNav />
 
         {/* FILM DATA */}
-        <div className="card-style">
-          {films.map(component => (
-            <div key={component.id}>
-              <Card film={component}/>
+        {isLoading ? (
+          <Loader />
+        ) : (
+          films && (
+            <div className="card-style">
+              {films.map(component => (
+                <div key={component.id}>
+                  <Card film={component}/>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          )
+        )}
       </div>
     </React.Fragment>
   )
