@@ -6,104 +6,114 @@ import Card from '../components/card'
 import Loader from '../components/loader'
 
 export default function HomePage() {
-  /* SAMPLE */
-  const sampleData: Film[] = [
-    { id: 1, filmNumber: '001', filmTitle: 'No Title', releaseDate: '2024.02.06', synopsis: 'English', production: 'Sample', director: 'Sample', producer: 'Sample', reference: '0000/00'},
-    { id: 2, filmNumber: '002', filmTitle: 'No Title', releaseDate: '2024.02.06', synopsis: 'English', production: 'Sample', director: 'Sample', producer: 'Sample', reference: '0000/00'},
-    { id: 3, filmNumber: '003', filmTitle: 'No Title', releaseDate: '2024.02.06', synopsis: 'English', production: 'Sample', director: 'Sample', producer: 'Sample', reference: '0000/00'},
-    { id: 4, filmNumber: '004', filmTitle: 'No Title', releaseDate: '2024.02.06', synopsis: 'English', production: 'Sample', director: 'Sample', producer: 'Sample', reference: '0000/00'},
-    { id: 5, filmNumber: '005', filmTitle: 'No Title', releaseDate: '2024.02.06', synopsis: 'English', production: 'Sample', director: 'Sample', producer: 'Sample', reference: '0000/00'},
-    { id: 6, filmNumber: '006', filmTitle: 'No Title', releaseDate: '2024.02.06', synopsis: 'English', production: 'Sample', director: 'Sample', producer: 'Sample', reference: '0000/00'},
-    { id: 7, filmNumber: '007', filmTitle: 'No Title', releaseDate: '2024.02.06', synopsis: 'English', production: 'Sample', director: 'Sample', producer: 'Sample', reference: '0000/00'},
-    { id: 8, filmNumber: '008', filmTitle: 'No Title', releaseDate: '2024.02.06', synopsis: 'English', production: 'Sample', director: 'Sample', producer: 'Sample', reference: '0000/00'},
-    { id: 9, filmNumber: '009', filmTitle: 'No Title', releaseDate: '2024.02.06', synopsis: 'English', production: 'Sample', director: 'Sample', producer: 'Sample', reference: '0000/00'},
-    { id: 10, filmNumber: '010', filmTitle: 'No Title', releaseDate: '2024.02.06', synopsis: 'English', production: 'Sample', director: 'Sample', producer: 'Sample', reference: '0000/00'},
-    { id: 11, filmNumber: '011', filmTitle: 'No Title', releaseDate: '2024.02.06', synopsis: 'English', production: 'Sample', director: 'Sample', producer: 'Sample', reference: '0000/00'},
-    { id: 12, filmNumber: '012', filmTitle: 'No Title', releaseDate: '2024.02.06', synopsis: 'English', production: 'Sample', director: 'Sample', producer: 'Sample', reference: '0000/00'},
-    { id: 13, filmNumber: '013', filmTitle: 'No Title', releaseDate: '2024.02.06', synopsis: 'English', production: 'Sample', director: 'Sample', producer: 'Sample', reference: '0000/00'},
-    { id: 14, filmNumber: '014', filmTitle: 'No Title', releaseDate: '2024.02.06', synopsis: 'English', production: 'Sample', director: 'Sample', producer: 'Sample', reference: '0000/00'},
-    { id: 15, filmNumber: '015', filmTitle: 'No Title', releaseDate: '2024.02.06', synopsis: 'English', production: 'Sample', director: 'Sample', producer: 'Sample', reference: '0000/00'},
-    { id: 16, filmNumber: '016', filmTitle: 'No Title', releaseDate: '2024.02.06', synopsis: 'English', production: 'Sample', director: 'Sample', producer: 'Sample', reference: '0000/00'},
-    { id: 17, filmNumber: '017', filmTitle: 'No Title', releaseDate: '2024.02.06', synopsis: 'English', production: 'Sample', director: 'Sample', producer: 'Sample', reference: '0000/00'},
-    { id: 18, filmNumber: '018', filmTitle: 'No Title', releaseDate: '2024.02.06', synopsis: 'English', production: 'Sample', director: 'Sample', producer: 'Sample', reference: '0000/00'},
-    { id: 19, filmNumber: '019', filmTitle: 'No Title', releaseDate: '2024.02.06', synopsis: 'English', production: 'Sample', director: 'Sample', producer: 'Sample', reference: '0000/00'},
-    { id: 20, filmNumber: '020', filmTitle: 'No Title', releaseDate: '2024.02.06', synopsis: 'English', production: 'Sample', director: 'Sample', producer: 'Sample', reference: '0000/00'},
-  ];
-
-  const [films, setFilms] = useState(sampleData);
+  const [films, setFilms] = useState<Films[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [page, setPage] = useState(1);
-  const [isPageLoading, setIsPageLoading] = useState(false);
+
+  /* PAGINATION PARAMETERS */
+  const pageSize = 60;
+  const [pageNumber, setPageNumber] = useState(0);
+
+  /* DEFAULT SEARCH ENTITY NAME FOR SEARCH */
+  const [entityName, setEntityName] = useState('filmNumber');
+
+  /* LOADING STATES */
+  const [isPageLoading, setIsPageLoading] = useState(true);
+  const [isHomeLoading, setIsHomeLoading] = useState(true);
   const [isScrollLoading, setIsScrollLoading] = useState(false);
+  const [isLastPage, setIsLastPage] = useState(false);
 
-  /* FETCH DATA */
+  /* EFFECT TO FETCH DATA BASED ON PAGE NUMBER, SEARCH QUERY, AND HOME LOADING STATE */
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if(page == 1) setIsPageLoading(true);
+    if(isHomeLoading) {
+      fetchData();
+    } 
+    else {
+      fetchSearch();
+    }
+  }, [pageNumber, searchQuery, isHomeLoading]);
 
-        /* SAMPLE */
-        setTimeout(() => {
-          setFilms(prev => [...prev, ...sampleData]);
-        }, 500);
-
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/films/${page}`);
-
-        if (response.ok) {
-          const data = await response.json();
-          setFilms(prev => [...prev, ...data]);
-        } else {
-          const errorText = await response.text();
-          toast.error(`${response.status}: ${errorText}`);
-        }
-      } catch (error) {
-        toast.error('404: failed to load data. please check your internet connection');
-      } finally {
-        setIsScrollLoading(false);
-        setIsPageLoading(false);
+  /* FUNCTION TO FETCH HOME DATA */
+  const fetchData = async () => {
+    try {
+      setIsHomeLoading(true);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/film/scroll?page=${pageNumber}&size=${pageSize}`);
+      
+      if (response.ok) {
+        const data = await response.json();
+        setFilms(prev => [...prev, ...data.content]);
+        
+        if(data.last) setIsLastPage(true);
+      } else if(response.status === 500){
+        toast.error('500: Internal server error occurred. Please try again later.');
+      } else{
+        const errorText = await response.text();
+        toast.error(`${response.status}: ${errorText}`);
       }
-    };
+    } catch (error) {
+      toast.error('503: Failed to load data. Please check your internet connection is stable');
+    } finally {
+      setIsScrollLoading(false);
+      setIsPageLoading(false);
+    }
+  };
 
-    fetchData();
-  }, [page]);
-
-  /* WHEN SCROLL */
+  /* EFFERCT TO HANDLE INFINITE SCROLL */
   useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
+    if(!isLastPage && !isScrollLoading) window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [])
+  }, [isLastPage, isScrollLoading])
   
+  /* FUNCTION TO HANDLE SCROLL EVENT */
   const handleScroll = () => {
-    if(window.innerHeight + document.documentElement.scrollTop + 1 >= document.documentElement.scrollHeight){
+    if(window.innerHeight + document.documentElement.scrollTop + 1 >= document.documentElement.scrollHeight){      
       setIsScrollLoading(true);
-      setPage(prev => prev + 1);
+      setPageNumber(prev => prev + 1);
     }
   }
 
-  /* WHEN SEARCH */
-  const handleSearch = async (query: string) => {
+  /* FUNCTION TO HANDLE SEARCH */
+  const handleSearch = async (query: string, tag: string) => {    
     setSearchQuery(query);
-    if(query === 'cl'){
-      if(page === 1) setPage(2);
-      else setPage(1);
+    setEntityName(tag);
+    setPageNumber(0);    
+    setIsLastPage(false);
+    
+    if(query === 'x' || query === ''){
       setFilms([]);
-      return;
+      setIsHomeLoading(true);
+    }else{
+      setIsHomeLoading(false);
+    }
+  };
+
+  /* FUNCTION TO FERCH SEARCH DATA */
+  const fetchSearch = async () => {
+    if(pageNumber == 0) {
+      setIsPageLoading(true);
+      setFilms([]);
     }
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/search/${searchQuery}`);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/film/search?entityName=${entityName}&searchValue=${searchQuery}&page=${pageNumber}&size=${pageSize}`);
 
       if (response.ok) {
         const data = await response.json();
-        setFilms(data);
+        setFilms(prev => [...prev, ...data.content]);
+
+        if(data.last) setIsLastPage(true);
+      } else if(response.status === 500){
+        toast.error('500: Internal server error occurred. Please try again later.');
       } else {
         const errorText = await response.text();
         toast.error(`${response.status}: ${errorText}`);
       }
     } catch (error) {
-      toast.error('404: failed to search data. please check your internet connection');
+      toast.error('503: Failed to search data. Please check your internet connection is stable');
+    } finally {
+      setIsScrollLoading(false);
+      setIsPageLoading(false);
     }
-  };
+  }
 
   return (
     <React.Fragment>
@@ -119,8 +129,8 @@ export default function HomePage() {
         ) : (
           films && (
             <div className="card-style">
-              {films.map(component => (
-                <div key={component.id}>
+              {films.map((component, index) => (
+                <div key={index}>
                   <Card film={component}/>
                 </div>
               ))}

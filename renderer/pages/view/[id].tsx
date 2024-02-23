@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Head from 'next/head'
+import Image from 'next/image'
 import toast from 'react-hot-toast'
 import SecondaryNav from '../../components/secondaryNav'
 import Loader from '../../components/loader'
@@ -9,44 +10,36 @@ export default function ViewPage() {
     const router = useRouter();
     const { id } = router.query;
 
-    /* SAMPLE */
-    const sampleData: SingleFilm = { 
-      filmNumber: '12345',
-      referance: 'REF123',
-      releaseDate: '2023-05-15',
-      filmTitle: 'The Great Adventure',
-      synopsis: 'A thrilling adventure of a group of explorers in search of a lost treasure.',
-      production: 'Adventure Studios',
-      director: 'John Smith',
-      producer: 'Jane Doe',
-      cast: 'Tom Cruise, Emily Blunt, Samuel L. Jackson',
-      script: 'Mark Johnson',
-      camera: 'Michael Johnson',
-      editor: 'Sarah Johnson',
-      music: 'David Williams',
-      story: 'Adventure, Drama',
-      dialogue: 'English',
-      assistantDirector: 'Alex Brown',
-      lyrics: 'Jane Smith',
-      songs: 'The Great Adventure Theme Song',
-      makeUp: 'Anna Johnson',
-      artDirector: 'Robert Smith',
-      audioController: 'Chris Evans',
-      title: 'The Great Adventure',
-      theaters: 'CinemaPlex, AMC Theaters',
-      awardPresidential: 'Best Adventure Film Award 2023',
-      awardsSarasaviya: 'Best Film Editing Award 2023',
-      awardsOcic: 'Best Visual Effects Award 2023',
-      awardOthers: 'Best Soundtrack Award 2023',
-      festivals: 'Cannes Film Festival, Toronto International Film Festival',
-      article: 'The Making of The Great Adventure',
-      critics: 'Highly acclaimed by critics worldwide',
-      others: 'Box office hit, loved by audiences of all ages'
+    const [film, setFilm] = useState<Film>();
+
+    // LOADING AND LOCK STATES */
+    const [isLoading, setIsLoading] = useState(false);
+    const [isLocked, setIsLocked] = useState(false);
+
+    /* FUNCTION TO TOGGLE LOCK STATUS */
+    const toggleLock = async () => {
+      const action = isLocked ? 'unlocked' : 'locked';
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/film/set/${action}/${id}`, {
+          method: 'PUT'
+        });
+        if (response.ok) {
+          setIsLocked(!isLocked);
+          const message = `Film data successfully ${isLocked ? 'unlocked' : 'locked'}`;
+          const icon = isLocked ? '🟧' : '🟥';
+          toast(message, { icon });
+        } else if(response.status === 500){
+          toast.error('500: Internal server error occurred. Please try again later.');
+        } else {
+          const errorText = await response.text();
+          toast.error(`${response.status}: ${errorText}`);
+        }
+      } catch (error) {
+        toast.error('503: An unexpected error occurred. please ensure your connection is stable.');
+      }
     };
 
-    const [film, setFilm] = useState(sampleData);
-    const [isLoading, setIsLoading] = useState(false);
-
+    /* EFFECT TO FETCH FILM DATA ON COMPONENT MOUNT */
     useEffect(() => {
       const fetchData = async () => {
         try {
@@ -54,21 +47,46 @@ export default function ViewPage() {
           const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/film/${id}`);
   
           if (response.ok) {
-            const data = await response.json();
+            const data = await response.json();            
             setFilm(data);
+            setIsLocked(data.isLocked);
+          } else if(response.status === 500){
+            toast.error('500: Internal server error occurred. Please try again later.');
           } else {
             const errorText = await response.text();
             toast.error(`${response.status}: ${errorText}`);
           }
         } catch (error) {
-          toast.error('404: failed to load data. please check your internet connection');
+          toast.error('503: An unexpected error occurred. Please check your internet connection is stable');
         } finally {
           setIsLoading(false);
         }
       };
   
       fetchData();
-    }, []); 
+    }, []);
+
+    const deleteHandler = async () => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/film/${id}`, {
+          method: 'DELETE'
+        });
+
+        if (response.ok) {
+          const successText = await response.text();
+          toast.success(`${response.status}: ${successText}`);
+        } else if(response.status === 500){
+          toast.error('500: Internal server error occurred. Please try again later.');
+        } else {
+          const errorText = await response.text();
+          toast.error(`${response.status}: ${errorText}`);
+        }
+      } catch (error) {
+        toast.error('503: An unexpected error occurred. Please check your internet connection is stable');
+      } finally {
+        router.push("/home");
+      }
+    }
 
   return (
     <React.Fragment>
@@ -83,11 +101,11 @@ export default function ViewPage() {
           <Loader />
         ) : (
           film && (
-            <div className='form-wapper pb-12'>
+            <div className='form-wapper pb-4'>
               <h1 className='view-style'>Film Number:&nbsp;&nbsp; 
                 <span className='span-style'>{film.filmNumber}</span></h1>
               <h1 className='view-style'>Referance:&nbsp;&nbsp; 
-                <span className='span-style'>{film.referance}</span></h1>
+                <span className='span-style'>{film.reference}</span></h1>
               <h1 className='view-style'>Release Date:&nbsp;&nbsp; 
                 <span className='span-style'>{film.releaseDate}</span></h1>
               <h1 className='view-style'>Film Title:&nbsp;&nbsp; 
@@ -97,9 +115,9 @@ export default function ViewPage() {
               <h1 className='view-style'>Production:&nbsp;&nbsp; 
                 <span className='span-style'>{film.production}</span></h1>
               <h1 className='view-style'>Director:&nbsp;&nbsp; 
-                <span className='span-style'>{film.director}</span></h1>
+                <span className='span-style'>{Array.isArray(film.director) ? film.director.join(', ') : film.director}</span></h1>
               <h1 className='view-style'>Producer:&nbsp;&nbsp; 
-                <span className='span-style'>{film.producer}</span></h1>
+                <span className='span-style'>{Array.isArray(film.producer) ? film.producer.join(', ') : film.producer}</span></h1>
               <h1 className='view-style'>Cast:&nbsp;&nbsp; 
                 <span className='span-style'>{film.cast}</span></h1>
               <h1 className='view-style'>Script:&nbsp;&nbsp; 
@@ -120,8 +138,8 @@ export default function ViewPage() {
                 <span className='span-style'>{film.lyrics}</span></h1>
               <h1 className='view-style'>Songs:&nbsp;&nbsp; 
                 <span className='span-style'>{film.songs}</span></h1>
-              <h1 className='view-style'>Meke Up:&nbsp;&nbsp; 
-                <span className='span-style'>{film.makeUp}</span></h1>
+              <h1 className='view-style'>Mekeup:&nbsp;&nbsp; 
+                <span className='span-style'>{film.makeup}</span></h1>
               <h1 className='view-style'>Art Director:&nbsp;&nbsp; 
                 <span className='span-style'>{film.artDirector}</span></h1>
               <h1 className='view-style'>Audio Controller:&nbsp;&nbsp; 
@@ -131,13 +149,13 @@ export default function ViewPage() {
               <h1 className='view-style'>Theaters:&nbsp;&nbsp; 
                 <span className='span-style'>{film.theaters}</span></h1>
               <h1 className='view-style'>Award Presidential:&nbsp;&nbsp; 
-                <span className='span-style'>{film.awardPresidential}</span></h1>
+                <span className='span-style'>{film.awardsPresidential}</span></h1>
               <h1 className='view-style'>Awards Sarasaviya:&nbsp;&nbsp; 
                 <span className='span-style'>{film.awardsSarasaviya}</span></h1>
               <h1 className='view-style'>Awards Ocic:&nbsp;&nbsp; 
                 <span className='span-style'>{film.awardsOcic}</span></h1>
               <h1 className='view-style'>Award Others:&nbsp;&nbsp; 
-                <span className='span-style'>{film.awardOthers}</span></h1>
+                <span className='span-style'>{film.awardsOthers}</span></h1>
               <h1 className='view-style'>Festivals:&nbsp;&nbsp; 
                 <span className='span-style'>{film.festivals}</span></h1>
               <h1 className='view-style'>Article:&nbsp;&nbsp; 
@@ -146,8 +164,34 @@ export default function ViewPage() {
                 <span className='span-style'>{film.critics}</span></h1>
               <h1 className='view-style'>Others:&nbsp;&nbsp; 
                 <span className='span-style'>{film.others}</span></h1>
+              <h1 className='view-style'>Special:&nbsp;&nbsp; 
+                <span className='span-style'>{film.special}</span></h1>
+              <h1 className='view-style'>Poster:&nbsp;&nbsp; 
+                <span className='span-style'>{film.poster}</span></h1>
+              <h1 className='view-style'>Image:&nbsp;&nbsp; 
+                <span className='span-style'>{film.image}</span></h1>
+              <h1 className='view-style'>Acknowledgement:&nbsp;&nbsp; 
+                <span className='span-style'>{film.acknowledgement}</span></h1>
+              <h1 className='view-style'>Pay Off Line:&nbsp;&nbsp; 
+                <span className='span-style'>{film.payOffLine}</span></h1>
+              <h1 className='view-style'>Last Up-Date:&nbsp;&nbsp; 
+                <span className='span-style'>{film.lastUpDate}</span></h1>
             </div>
           )
+        )}
+
+        {(!isLoading && film) && (
+          <div className='button-wapper'>
+            <button className={`button-style ${isLocked ? 'ring-orange' : 'ring-red'}`} onClick={toggleLock} type="button">
+              <Image src={`/icons/${isLocked ? 'unlock' : 'lock'}-icon.png`} width={24} height={24} alt="lock-icon" />
+              <h1 className="text-buttonBlack font-medium text-lg">{`set as ${isLocked ? 'unlock' : 'lock'}`}</h1>
+            </button>
+
+            <button className="button-style ring-black" onClick={deleteHandler} type="button">
+              <Image src="/icons/bin-icon.png" width={20} height={20} alt="clear-icon" />
+              <h1 className="text-buttonBlack font-medium text-lg">delete data</h1>
+            </button>
+          </div>
         )}
       </div>
     </React.Fragment>

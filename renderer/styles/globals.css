@@ -81,4 +81,12 @@ h1, h2, h3, h4, h5, h6{
   @apply text-zinc-900
 }
 
+/* SELECT STYLE */
 
+.select-style{
+  @apply outline-none border-2 border-buttonBlack rounded-lg appearance-none px-2 py-0.5 font-medium text-buttonBlack
+}
+
+.option-style{
+  @apply bg-buttonBlack text-white
+}
