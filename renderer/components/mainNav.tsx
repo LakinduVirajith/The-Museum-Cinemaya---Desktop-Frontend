@@ -4,21 +4,22 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 export default function MainNav({ onSearch }) {
-    const [search, setSearch] = useState('');
+    const [searchValue, setSearchValue] = useState('');
+    const [selectedTag, setSelectedTag] = useState('filmNumber');
     let autoSearchTimer: NodeJS.Timeout;
 
-    /* AUTO SEARCH */
+    /* EFFECT TO TRIGGER AUTO SEARCH AFTER 5 SECONDS OF INACTIVITY */
     useEffect(() => {
-        if (search.trim() !== '') {
+        if (searchValue.trim() !== '') {
             autoSearchTimer  = setTimeout(() => {
             searchTrigger();
           }, 5000);
         }
     
         return () => clearTimeout(autoSearchTimer );
-    }, [search]);
+    }, [searchValue]);
 
-    /* PRESS ENTER */
+    /* HANDLEE FOR PRESSING ENTER KEY IN SEARCH INPUT */
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
           event.preventDefault();
@@ -27,22 +28,26 @@ export default function MainNav({ onSearch }) {
         }
       };
 
-    /* SEARCH ICON */
+    /* HANDLER FOR CLICKING THE SERCH ICON */
     const handleSearchIconClick = () => {
         clearTimeout(autoSearchTimer);
         searchTrigger();
     };
 
-    const searchTrigger = async () => {
-        if(search.trim() !== ''){
-            onSearch(search);
-        }
-    }
-    
-    /* CROSS ICON */
+    /* HANDLER FOR CLICKING THE CROSS ICON TO CLEAR SEARCH */
     const cleanSearch = () => {
-        setSearch('');
-        onSearch('cl');
+        setSearchValue('');
+        onSearch('x', 'x');
+    }
+
+    /* HANDLER FUNCTION TO UPDATE SELECTED VALUE */
+    const handleChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
+        setSelectedTag(event.target.value);
+    };
+
+    /* FUNCTION TO TRIGGER SEARCH */
+    const searchTrigger = async () => {
+        onSearch(searchValue, selectedTag);
     }
 
     return (
@@ -56,12 +61,25 @@ export default function MainNav({ onSearch }) {
                 </section>
 
                 {/* SEARCH BAR */}
-                <section className='flex py-2 px-3 h-fit w-fit gap-1.5 bg-white rounded-lg'>
-                    <input type="text" className='outline-none w-96 min-w-64' value={search} placeholder='Search' onChange={(e) => setSearch(e.target.value)} onKeyDown={handleKeyDown}/>
-                    {search.trim() !== '' && 
-                        <Image src="/icons/cross-icon.png" className='cursor-pointer' width={28} height={28} alt="cross-icon" onClick={cleanSearch} />
+                <section className='flex py-2 px-3 h-fit w-fit items-center gap-1.5 bg-white rounded-lg'>
+                    <input type="text" className='outline-none w-72 min-w-64' value={searchValue} placeholder='Search' onChange={(e) => setSearchValue(e.target.value)} onKeyDown={handleKeyDown}/>
+
+                    <select name="tag" id="tag" className='select-style' value={selectedTag} onChange={handleChange}>
+                        <option className='option-style' value="filmNumber">Film Number</option>
+                        <option className='option-style' value="reference">Reference</option>
+                        <option className='option-style' value="releaseDate">Release Date</option>
+                        <option className='option-style' value="filmTitle">Film Title</option>
+                        <option className='option-style' value="synopsis">Synopsis</option>
+                        <option className='option-style' value="production">Production</option>
+                        <option className='option-style' value="director">Director</option>
+                        <option className='option-style' value="producer">Producer</option>
+                    </select>
+                    <hr className='h-7 w-0.5 mr-1 ml-2 bg-gray-800'/>
+
+                    {searchValue.trim() !== '' && 
+                        <Image src="/icons/cross-icon.png" className='cursor-pointer' width={32} height={32} alt="cross-icon" onClick={cleanSearch} />
                     }
-                    <Image src="/icons/search-icon.png" className='cursor-pointer' width={28} height={28} alt="search-icon" onClick={handleSearchIconClick} />
+                    <Image src="/icons/search-icon.png" className='cursor-pointer' width={32} height={32} alt="search-icon" onClick={handleSearchIconClick} />
                 </section>
             </div>
 

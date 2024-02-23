@@ -1,24 +1,23 @@
-type Film = {
-    id: number;
+type Films = {
     filmNumber: string,
-    filmTitle: string,
+    reference: string,
     releaseDate: string,
+    filmTitle: string,
     synopsis: string,
     production: string,
-    director: string, 
-    producer: string,
-    reference: string
+    director: string[], 
+    producer: string[]
 }
 
-type SingleFilm = {
+type Film = {
     filmNumber: string,
-    referance: string,
+    reference: string,
     releaseDate: string,
     filmTitle: string,
     synopsis: string,
     production: string,
-    director: string,
-    producer: string,
+    director: string[],
+    producer: string[],
     cast: string,
     script: string,
     camera: string,
@@ -29,17 +28,23 @@ type SingleFilm = {
     assistantDirector: string,
     lyrics: string,
     songs: string,
-    makeUp: string,
+    makeup: string,
     artDirector: string,
     audioController: string,
     title: string,
     theaters: string,
-    awardPresidential: string,
+    awardsPresidential: string,
     awardsSarasaviya: string,
     awardsOcic: string,
-    awardOthers: string,
+    awardsOthers: string,
     festivals: string,
     article: string,
     critics: string,
-    others: string
+    others: string,
+    special: string,
+    poster: string,
+    image: string,
+    acknowledgement: string
+    payOffLine: string,
+    lastUpDate: string
 }
