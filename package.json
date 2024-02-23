@@ -3,9 +3,9 @@
   "name": "the-museum-cinemaya",
   "productName": "The Museum Cinemaya",
   "description": "The Museum Cinemaya Desktop Application",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "VP CODE LABS",
-  "license": "MIT",
+  "license": "VP CODE LABS LICENSE",
   "main": "app/background.js",
   "scripts": {
     "dev": "nextron",
