@@ -10,9 +10,9 @@ app/
 dist/
 
 # environment variables
-.env.local
-.env.development
-.env.production
+# .env.local
+# .env.development
+# .env.production
 
 # lock files
 package-lock.json

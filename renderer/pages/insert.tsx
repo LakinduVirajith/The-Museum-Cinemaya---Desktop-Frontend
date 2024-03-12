@@ -1,6 +1,7 @@
 import React from 'react'
 import Head from 'next/head'
 import SecondaryNav from '../components/secondaryNav'
+import InsertForm from '../forms/insertForm'
 
 export default function InsertPage() {
   return (
@@ -10,6 +11,7 @@ export default function InsertPage() {
       </Head>
       <div className="page-style">
         <SecondaryNav />
+        <InsertForm />
       </div>
     </React.Fragment>
   )
