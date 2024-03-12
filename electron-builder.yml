@@ -1,23 +1,48 @@
+# Electrone Build Configuration for The Museum Cinemaya
+
+# Application ID
 appId: com.the-museum-cinemaya.app
+
+# Product Name
 productName: The Museum Cinemaya
+
+# Copyright
 copyright: Copyright (c) 2024 VP CODE LABS
+
+# Directories
 directories:
   output: dist
   buildResources: resources
+
+# Files to Include
 files:
   - from: .
     filter:
       - package.json
       - app
+
+# Publish Configuration
 publish: null
+
+# Windows Build Configuration
 win:
+  # Target Build Platforms
   target:
     - nsis
     - dir
     - portable
     - zip
+
+# NSIS Installer Configuration
 nsis:
+    # Enable or Disable One-Click Installation
   oneClick: false
+
+    # Uninstaller Display Name
   uninstallDisplayName: The Museum Cinemaya Uninstaller
-  license: LICENSE.md
+
+    # License File Path
+  license: LICENSE
+
+    # Allow Users to Change Installation Directory
   allowToChangeInstallationDirectory: true

@@ -72,9 +72,9 @@ export default function HomePage() {
   }
 
   /* FUNCTION TO HANDLE SEARCH */
-  const handleSearch = async (query: string, tag: string) => {    
+  const handleSearch = async (query: string, entity: string) => {    
     setSearchQuery(query);
-    setEntityName(tag);
+    setEntityName(entity);
     setPageNumber(0);    
     setIsLastPage(false);
     
